@@ -2,7 +2,7 @@
     <script type="text/javascript" src="<?php echo Config::get('URL'); ?>js/vue.min.js"></script>
     <script type="text/javascript" src="<?php echo Config::get('URL'); ?>js/instascan.min.js"></script>
     <script type="text/javascript" src="<?php echo Config::get('URL'); ?>js/ajax.js"></script>
-
+    <div id="debug"></div>
     <div id="board">
       <h1>{{spaBag.tourName}}</h1>
       <h3>{{spaBag.feedback}}</h3>
@@ -43,6 +43,7 @@
       <div class="preview-container">
         <video id="preview"></video>
       </div>
+      <button id="scan-cancel" v-on:click="back">terug</button>
       <div class="sidebar">
         <section class="cameras">
           <h2>Cameras</h2>
@@ -56,18 +57,22 @@
             </li>
           </ul>
         </section>
-        <section class="scans">
-          <h2>Scans</h2>
-          <ul v-if="scans.length === 0">
-            <li class="empty">No scans yet</li>
-          </ul>
-          <transition-group name="scans" tag="ul">
-            <li v-for="scan in scans" :key="scan.date" :title="scan.content">{{ scan.content }}</li>
-          </transition-group>
-        </section>
       </div>
     </div>
-    <div id=""
+    <div id="question" v-bind:class="{ focus: (spaBag.status == 5) }">
+      <h2>{{title}}</h2>
+      <p>{{location}}</p>
+      <h2>Vraag</h2>
+      <p>{{description}}</p>
+      <ul class="options">
+        <li v-for="(option, index) in options">
+          <input type="radio" v-bind:id="option.id" v-bind:value="option.id" v-model="answer">
+          <label v-bind:for="option.id">{{option.description}}</label>
+        </li>
+      </ul>
+      <button id="answer" v-on:click="submit">Antwoord sturen</button><br>
+      <h1>{{answer}}</h1>
+    </div>
     <script type="text/javascript">
       spaBag = {
         memberToken: '<?php if($this->member) echo $this->member->token; ?>',

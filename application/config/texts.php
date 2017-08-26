@@ -68,6 +68,7 @@ return array(
     "FEEDBACK_ACCOUNT_TYPE_CHANGE_SUCCESSFUL" => "Account type change successful",
     "FEEDBACK_ACCOUNT_TYPE_CHANGE_FAILED" => "Account type change failed",
     "FEEDBACK_TEAM_CREATION_FAILED" => "Team creation failed.",
+    "FEEDBACK_ANSWER_CREATION_FAILED" => "Answer creation failed.",
     "FEEDBACK_MEMBER_CREATION_FAILED" => "Member creation failed.",
     "FEEDBACK_MEMBER_EDITING_FAILED" => "Member editing failed.",
     "FEEDBACK_NOTE_DELETION_FAILED" => "Note deletion failed.",
@@ -77,4 +78,9 @@ return array(
     "FEEDBACK_MEMBER_NAME_INVALID" => "De naam bestaal al of bevat ongewenste tekst",
     "FEEDBACK_TOUR_PIN_INVALID" => "Ongeldige pincode",
     "FEEDBACK_TEAM_PIN_INVALID" => "Ongeldige pincode",
+    "FEEDBACK_QUESTION_CODE_INVALID" => "Deze vraag hoort er niet bij",
+    "FEEDBACK_QUESTION_ANSWERED" => "Deze vraag is al beantwoord",
+    "FEEDBACK_QUESTION_INVALID" => "Deze vraag is ongeldig",
+    "FEEDBACK_QUESTION_CORRECT_ANSWERED" => "Vraag correct beantwoord, prima!",
+    "FEEDBACK_QUESTION_FALSE_ANSWERED" => "Vraag fout beantwoord, jammer!",
 );

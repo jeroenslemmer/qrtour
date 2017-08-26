@@ -4,7 +4,7 @@ body, html {
   font-family: 'Helvetica Neue', 'Calibri', Arial, sans-serif;
   height: 100%;
 }
-#scan, #start, #team-create, #team-join, #team {
+#scan, #start, #team-create, #team-join, #team, #question {
   display: none;
   height: 100%;
 }
@@ -67,4 +67,8 @@ body, html {
   align-items: center;
   width: 400px;
   overflow: hidden;
+}
+
+.options{
+  list-style: none;
 }

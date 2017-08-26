@@ -1,9 +1,10 @@
+
 var board = new Vue({
   el: '#board',
   data: {
-    spaBag: spaBag,
+    spaBag: spaBag
   }
-})
+});
 
 var start = new Vue({
   el: '#start',
@@ -88,6 +89,7 @@ var teamJoin = new Vue({
     back: function(event){
       spaBag.feedback = ' ';
       spaBag.status = (spaBag.memberToken>'')?3:0;
+
     }
   } 
 });
@@ -116,16 +118,35 @@ var scan = new Vue({
     scanner: null,
     activeCameraId: null,
     cameras: [],
-    scans: []
+    scanning: false
   },
   mounted: function () {
     var self = this;
-    self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5 });
-    self.scanner.addListener('scan', function (content, image) {
+    self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, captureImage: false, backgroundScan: false });
+    self.scanner.addListener('scan', function (questionCode) {
       //self.scans.unshift({ date: +(Date.now()), content: content });
-
-
-      console.log(content);
+      /* TEST */ questionCode = 'abcde';
+      formData = new FormData();
+      formData.append('questionCode', questionCode);
+      ajax('/question/get', {
+        method: 'POST',
+        data: formData,
+        success: function(req){
+          document.getElementById('debug').innerHTML = req.response;
+          var result = JSON.parse(req.response);
+          if (result){
+            spaBag.feedback = result.feedback;
+            if (result.success){
+              question.code = questionCode;
+              question.title = result.title;
+              question.location = result.location;
+              question.options = result.options;
+              question.description = result.description;
+              spaBag.status = 5;
+            }
+          }
+        }
+      });
     });
     Instascan.Camera.getCameras().then(function (cameras) {
       self.cameras = cameras;
@@ -146,6 +167,52 @@ var scan = new Vue({
     selectCamera: function (camera) {
       this.activeCameraId = camera.id;
       this.scanner.start(camera);
+    },
+    back: function(event){
+      spaBag.status = 3;
     }
   }
 });
+
+var question = new Vue({
+  el: '#question',
+  data: {
+    spaBag: spaBag,
+    code: null,
+    title: '',
+    location: '',
+    description: '',
+    answer: null,
+    options: [
+    ]
+  },
+  methods: {
+    submit: function(event){
+      if (!this.answer) return;
+      formData = new FormData();
+      formData.append('questionCode', this.code);
+      formData.append('optionId',this.answer);
+      ajax('/question/answer', {
+        method: 'POST',
+        data: formData,
+        success: function(req){
+          document.getElementById('debug').innerHTML = req.response;
+          var result = JSON.parse(req.response);
+          if (result){
+            spaBag.feedback = result.feedback;
+            spaBag.status = 3;
+            if (result.success){
+              question.code = null;
+              question.title = '';
+              question.location = '';
+              question.options = [];
+              question.description = '';
+            }
+          }
+        }
+      });      
+    }
+
+  }
+});
+
