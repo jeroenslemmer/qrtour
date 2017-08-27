@@ -22,11 +22,6 @@ class TourModel
         return $query->fetchAll();
     }*/
 
-    /**
-     * Get a single tour by pin
-     * @param int $note_id id of the specific note
-     * @return object a single object (the result)
-     */
     public static function getTourByPin($pin)
     {
         $database = DatabaseFactory::getFactory()->getConnection();

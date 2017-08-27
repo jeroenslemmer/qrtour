@@ -4,7 +4,7 @@ body, html {
   font-family: 'Helvetica Neue', 'Calibri', Arial, sans-serif;
   height: 100%;
 }
-#scan, #start, #team-create, #team-join, #team, #question {
+#scan, #start, #team-create, #team-join, #team, #question, #show-pin {
   display: none;
   height: 100%;
 }

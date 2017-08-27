@@ -12,23 +12,18 @@ class TeamModel
      * Get all notes (notes are just example data that the user has created)
      * @return array an array with several objects (the results)
      */
-    /*public static function getAllNotes()
+    public static function getAllTeamsByTourId($tourId)
     {
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT user_id, note_id, note_text FROM notes WHERE user_id = :user_id";
+        $sql = "SELECT * FROM teams WHERE tour_id = :tour_id";
         $query = $database->prepare($sql);
-        $query->execute(array(':user_id' => Session::get('user_id')));
+        $query->execute(array(':tour_id' => $tourId));
 
         // fetchAll() is the PDO method that gets all result rows
         return $query->fetchAll();
-    }*/
+    }
 
-    /**
-     * Get a single note
-     * @param int $note_id id of the specific note
-     * @return object a single object (the result)
-     */
     public static function getTeam($team_id)
     {
         $database = DatabaseFactory::getFactory()->getConnection();

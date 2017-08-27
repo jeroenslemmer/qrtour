@@ -5,6 +5,7 @@
     <div id="debug"></div>
     <div id="board">
       <h1>{{spaBag.tourName}}</h1>
+      <h2>{{spaBag.teamName}}</h2>
       <h3>{{spaBag.feedback}}</h3>
     </div>
 
@@ -32,18 +33,17 @@
       <button id="team-join-cancel" v-on:click="back">terug</button>
     </div>
     <div id="team" v-bind:class="{ focus: (spaBag.status == 3) }">
-      <h2>Je loopt in team: <strong>{{spaBag.teamName}}</strong></h2>
-      <p>Aansluiten bij dit team met pincode: <strong>{{spaBag.teamPin}}</strong></p>
       <button id="qr-scan" v-on:click="scan">Scan QR-code</button><br>
-      <button id="tour-info">Excursie info</button><br>
+      <button id="pin-show" v-on:click="showPin">Toon pincode</button><br>
       <button id="team-leave" v-on:click="rejoin">Ga naar een ander team</button>
     </div>
     <div id="scan" v-bind:class="{ focus: (spaBag.status == 4) }">
       <h2>Scanning</h2>
+      <button id="scan-cancel" v-on:click="back">stop scannen</button>
       <div class="preview-container">
         <video id="preview"></video>
       </div>
-      <button id="scan-cancel" v-on:click="back">terug</button>
+      
       <div class="sidebar">
         <section class="cameras">
           <h2>Cameras</h2>
@@ -73,6 +73,12 @@
       <button id="answer" v-on:click="submit">Antwoord sturen</button><br>
       <h1>{{answer}}</h1>
     </div>
+    <div id="show-pin" v-bind:class="{ focus: (spaBag.status == 9) }">
+      <h3>Aansluiten bij jullie team met pincode:</h3>
+      <h2>{{spaBag.teamPin}}</h2>
+      <button id="cancel-show-pin" v-on:click="back">Terug</button><br>
+    </div>
+
     <script type="text/javascript">
       spaBag = {
         memberToken: '<?php if($this->member) echo $this->member->token; ?>',
@@ -82,9 +88,8 @@
         tourName: '<?php if($this->tour) echo $this->tour->name; ?>',
         csrf: '<?php echo $this->csrf; ?>',
         status: <?php echo ($this->member)?3:0 ?>,
-        feedback: '<?php echo ($this->feedback)?$this->feedback:'Welkom op deze tocht'; ?>'
+        feedback: '<?php echo ($this->feedback)?$this->feedback:(($this->member)?'welkom terug...':'Welkom op deze tocht!'); ?>'
       } 
     </script>
     <script type="text/javascript" src="<?php echo Config::get('URL'); ?>js/app.js"></script>
-  </body>
-</html>
+

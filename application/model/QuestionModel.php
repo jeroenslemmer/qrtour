@@ -76,14 +76,27 @@ class QuestionModel
         return $query->fetch();
     }
 
-/*    public static function teamScore($teamId){
+   public static function teamResult($teamId){
         $database = DatabaseFactory::getFactory()->getConnection();
-        $scores = [];
-        $sql = "SELECT * FROM questions JOIN tourquestions ON tourquestions.question_id = questions.idWHERE id = :option_id LIMIT 1";
 
-        $scores['max'] 
+        $sql = "SELECT questions.score as value, options.correct as correct FROM questions JOIN options ON options.question_id = questions.id JOIN answers ON answers.option_id = options.id WHERE answers.team_id = :team_id";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(':team_id'=>$teamId));
+
+        // fetch() is the PDO method that gets a single result
+        $answers = $query->fetchAll();
+
+        $score = 0;
+        $max = 0;
+        foreach($answers as $answer){
+            if ($answer->correct) $score += $answer->value;
+            $max += $answer->value;
+        }
+
+        return ['score' => $score, 'max' => $max];
     }
-    */
+
 
     public static function answer($optionId, $teamId){
         $database = DatabaseFactory::getFactory()->getConnection();

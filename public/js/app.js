@@ -107,6 +107,9 @@ var team = new Vue({
       spaBag.status = 2;
       spaBag.feedback = ' ';
       teamJoin.teamPin = '';
+    },
+    showPin: function(event){
+      spaBag.status = 9;
     }
   }
 
@@ -122,7 +125,7 @@ var scan = new Vue({
   },
   mounted: function () {
     var self = this;
-    self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, captureImage: false, backgroundScan: false });
+    self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, captureImage: false, backgroundScan: true });
     self.scanner.addListener('scan', function (questionCode) {
       //self.scans.unshift({ date: +(Date.now()), content: content });
       /* TEST */ questionCode = 'abcde';
@@ -132,7 +135,7 @@ var scan = new Vue({
         method: 'POST',
         data: formData,
         success: function(req){
-          document.getElementById('debug').innerHTML = req.response;
+          //document.getElementById('debug').innerHTML = req.response;
           var result = JSON.parse(req.response);
           if (result){
             spaBag.feedback = result.feedback;
@@ -143,6 +146,9 @@ var scan = new Vue({
               question.options = result.options;
               question.description = result.description;
               spaBag.status = 5;
+            } else {
+              setTimeout(function(){spaBag.status = 3;},1000);
+              setTimeout(function(){spaBag.feedback = '';},3000);
             }
           }
         }
@@ -170,6 +176,7 @@ var scan = new Vue({
     },
     back: function(event){
       spaBag.status = 3;
+      spaBag.feedback = ' ';
     }
   }
 });
@@ -213,6 +220,18 @@ var question = new Vue({
       });      
     }
 
+  }
+});
+
+var showPin = new Vue({
+  el: '#show-pin',
+  data: {
+    spaBag: spaBag
+  },
+  methods: {
+    back: function(event){
+      spaBag.status = 3;
+    }
   }
 });
 
