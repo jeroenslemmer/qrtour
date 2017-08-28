@@ -12,23 +12,18 @@ class QuestionModel
      * Get all notes (notes are just example data that the user has created)
      * @return array an array with several objects (the results)
      */
-    /*public static function getAllNotes()
+    public static function getAllQuestions()
     {
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT user_id, note_id, note_text FROM notes WHERE user_id = :user_id";
+        $sql = "SELECT id, title, location, description FROM questions";
         $query = $database->prepare($sql);
-        $query->execute(array(':user_id' => Session::get('user_id')));
+        $query->execute(array());
 
         // fetchAll() is the PDO method that gets all result rows
         return $query->fetchAll();
-    }*/
+    }
 
-    /**
-     * Get a single note
-     * @param int $note_id id of the specific note
-     * @return object a single object (the result)
-     */
     public static function getQuestionByTourIdAndCode($tourId, $code)
     {
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -40,6 +35,27 @@ class QuestionModel
         // fetch() is the PDO method that gets a single result
         return $query->fetch();
     }
+
+    public static function getQuestionByCode($code)
+    {
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $sql = "SELECT * FROM questions WHERE questions.code = :code LIMIT 1";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(':code'=>$code));
+
+        // fetch() is the PDO method that gets a single result
+        return $query->fetch();
+    }
+
+    public static function getUniqueQuestionCode(){
+        while (true) {
+            $code = generatePin(10);
+            $question = self::getQuestionByCode($code);
+            if (!$question) return $code;
+        } 
+    }
+
 
     public static function getTeamQuestionAnswer($questionId, $teamId){
         $database = DatabaseFactory::getFactory()->getConnection();
@@ -113,31 +129,28 @@ class QuestionModel
         Session::add('feedback_negative', Text::get('FEEDBACK_ANSWER_CREATION_FAILED'));
 
     }
-    /**
-     * Update an existing note
-     * @param int $note_id id of the specific note
-     * @param string $note_text new text of the specific note
-     * @return bool feedback (was the update successful ?)
-     */
-    /*public static function updateNote($note_id, $note_text)
+
+    public static function updateQuestion($id, $title, $location, $description)
     {
-        if (!$note_id || !$note_text) {
+        if (!$id || !$title || !$location || !$description ) {
             return false;
         }
 
+
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "UPDATE notes SET note_text = :note_text WHERE note_id = :note_id AND user_id = :user_id LIMIT 1";
+        $sql = "UPDATE questions SET title = :title, location =:location, description = :description WHERE id = :id LIMIT 1";
+
         $query = $database->prepare($sql);
-        $query->execute(array(':note_id' => $note_id, ':note_text' => $note_text, ':user_id' => Session::get('user_id')));
+        $query->execute(array(':id' => $id, ':title' => $title, ':location' => $location, ':description' => $description));
 
         if ($query->rowCount() == 1) {
             return true;
         }
 
-        Session::add('feedback_negative', Text::get('FEEDBACK_NOTE_EDITING_FAILED'));
+        Session::add('feedback_negative', Text::get('FEEDBACK_QUESTION_EDITING_FAILED'));
         return false;
-    }*/
+    }
 
     /**
      * Delete a specific note

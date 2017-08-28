@@ -11,17 +11,17 @@ class MemberModel
      * Get all notes (notes are just example data that the user has created)
      * @return array an array with several objects (the results)
      */
-    /*public static function getAllNotes()
+    public static function getAllMemberByTeam($teamId)
     {
         $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT user_id, note_id, note_text FROM notes WHERE user_id = :user_id";
+        $sql = "SELECT name FROM members WHERE team_id = :team_id";
         $query = $database->prepare($sql);
-        $query->execute(array(':user_id' => Session::get('user_id')));
+        $query->execute(array(':team_id' => $teamId));
 
         // fetchAll() is the PDO method that gets all result rows
         return $query->fetchAll();
-    }*/
+    }
 
     public static function getMember($id)
     {

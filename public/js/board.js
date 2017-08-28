@@ -10,8 +10,6 @@ var refresh = function(self){
   setTimeout(refresh,10000,self);
 }
 
-
-
 var board = new Vue({
   el: '#board',
   data: {
@@ -22,4 +20,8 @@ var board = new Vue({
     refresh(self);
   }
 });
+
+document.getElementById('board').className += ' focus';
+
+
 

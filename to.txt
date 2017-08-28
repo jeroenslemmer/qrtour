@@ -1,0 +1,16 @@
+To do:
+
+csrf-tokens verwerken
+
+score optie 
+teamleden optie
+
+qr-codes ophangen
+
+leave tour optie
+
+iphone compatibiliteit
+
+layout overzicht
+
+

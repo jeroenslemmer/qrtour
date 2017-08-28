@@ -4,37 +4,43 @@ body, html {
   font-family: 'Helvetica Neue', 'Calibri', Arial, sans-serif;
   height: 100%;
 }
-#scan, #start, #team-create, #team-join, #team, #question, #show-pin {
+
+div {
+  padding: 0;
+  margin: 0;
+}
+#board, #actions, #scan, #start, #team-create, #team-join, #team, #question, #show-pin, #edit-question {
   display: none;
-  height: 100%;
+}
+
+.w3-panel{
+  margin: 1px;
+}
+
+.w3-button{
+  margin:1px;
+  width: 100%;
+  max-width: 400px;
+}
+
+#board h1 {
+  font-size: 22px;
+}
+
+#board h2 {
+  font-size: 16px;
+  height: 25px;
+  overflow: hidden;
+}
+
+#actions h1 {
+  font-size: 18px;
 }
 
 .focus {
   display: block !important;
 }
-.sidebar {
-  min-width: 250px;
-  overflow: auto;
-}
-.sidebar h2 {
-  font-weight: normal;
-  font-size: 1.0rem;
-  color: #fff;
-  padding: 10px;
-  margin: 0;
-}
-.sidebar ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-.sidebar li {
-  line-height: 175%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-wrap: none;
-  text-overflow: ellipsis;
-}
+
 .cameras ul {
   padding: 15px 20px;
 }
@@ -65,8 +71,13 @@ body, html {
 }
 .preview-container {
   align-items: center;
-  width: 400px;
+  width: 100%;
   overflow: hidden;
+}
+
+.feedback{
+  min-height: 25px;
+  color: white;
 }
 
 .options{

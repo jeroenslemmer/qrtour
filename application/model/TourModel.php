@@ -1,5 +1,5 @@
 <?php
-
+require_once(Config::get('PATH_HELPER') . 'pin.php');
 /**
  * NoteModel
  * This is basically a simple CRUD (Create/Read/Update/Delete) demonstration.
@@ -50,6 +50,120 @@ class TourModel
         // fetch() is the PDO method that gets a single result
         return $query->fetch();
     }
+
+    public static function generateTourQuestions(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = "DELETE FROM tourquestions";
+        $query = $database->prepare($sql);
+        $query->execute();
+
+
+        $sql = "SELECT * FROM tours";
+        $query = $database->prepare($sql);
+        $query->execute();
+
+        // fetch() is the PDO method that gets a single result
+        $tours =  $query->fetchAll();
+
+        $sql = "SELECT * FROM questions";
+        $query = $database->prepare($sql);
+        $query->execute();
+
+        // fetch() is the PDO method that gets a single result
+        $questions =  $query->fetchAll();
+
+        $sql = "INSERT INTO tourquestions(tour_id, question_id) VALUES";
+        $values = '';
+        foreach($tours as $tour){
+            foreach($questions as $question){
+                if ($values > '') $values .= ',';
+                $values .= '(' . $tour->id . ',' . $question->id . ')';
+            }
+        }
+        $sql .= $values . ';';
+        $query = $database->prepare($sql);
+        $query->execute();       
+        //echo $sql;
+    }
+
+    public static function generateQuestionCodes(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = "SELECT * FROM questions";
+        $query = $database->prepare($sql);
+        $query->execute();
+
+        $questions = $query->fetchAll();
+
+        $sql = "UPDATE questions SET code = :code WHERE id = :id";
+        $query = $database->prepare($sql);
+        foreach($questions as $question){
+            $code = QuestionModel::getUniqueQuestionCode();
+            $query->execute(array(':id'=>$question->id,':code'=>$code));
+        }
+    }
+
+    public static function getUniqueTourPin(){
+        while (true) {
+            $pin = generatePin(4);
+            $tour = self::getTourByPin($pin);
+            if (!$tour) return $pin;
+        } 
+    }
+
+    public static function generateTourPins(){
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = "SELECT * FROM tours";
+        $query = $database->prepare($sql);
+        $query->execute();
+
+        $tours = $query->fetchAll();
+
+        $sql = "UPDATE tours SET pin = :pin WHERE id = :id";
+        $query = $database->prepare($sql);
+        foreach($tours as $tour){
+            $pin = self::getUniqueTourPin();
+            $query->execute(array(':id'=>$tour->id,':pin'=>$pin));
+        }
+    }
+
+    public static function cleanupTour($tourId){
+        $database = DatabaseFactory::getFactory()->getConnection();
+        $sql = "SELECT answers.id FROM answers JOIN teams ON answers.team_id = teams.id WHERE teams.tour_id = :tour_id";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(':tour_id'=>$tourId));  
+        $answers = $query->fetchAll();
+
+        $sql = "DELETE FROM answers WHERE id = :id";
+        $query = $database->prepare($sql);
+        foreach ($answers as $answer){
+            $query->execute(array(':id'=>$answer->id));
+        }
+
+        $sql = "SELECT members.id FROM members JOIN teams ON members.team_id = teams.id WHERE teams.tour_id = :tour_id";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(':tour_id'=>$tourId));  
+
+        $members = $query->fetchAll();
+
+        $sql = "DELETE FROM members WHERE id = :id";
+        $query = $database->prepare($sql);
+        foreach ($members as $member){
+            $query->execute(array(':id'=>$member->id));
+        }
+
+        $sql = "DELETE FROM teams WHERE tour_id = :tour_id";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(':tour_id'=>$tourId));
+
+           
+    }
+
 
     /**
      * Set a note (create a new one)

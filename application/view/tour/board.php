@@ -5,9 +5,9 @@
     <div id="board">
       <h1>{{tour.name}} {{tour.year}}</h1>
       <h3>{{tour.feedback}}</h3>
-      <table>
-        <tr><th>Team</th><th>Punten uit</th><th>maximaal</th></tr>
-        <tr v-for="teamResult in tour.results"><td>{{teamResult.name}}</td><td><strong>{{teamResult.result.score}}</strong></td><td>{{teamResult.result.max}}</td></tr>
+      <table class="w3-table w3-bordered w3-white w3-striped">
+        <tr><th class="column-team">Team (leden)</th><th>Punten</th><th>van maximaal</th></tr>
+        <tr v-for="teamResult in tour.results"><td>{{teamResult.name}} ({{teamResult.members}})</td><td><strong>{{teamResult.result.score}}</strong></td><td>{{teamResult.result.max}}</td></tr>
       </table>
     </div>
 

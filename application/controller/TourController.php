@@ -52,12 +52,19 @@ class TourController extends Controller
             foreach($teams as $team){
                 $result = ['name'=> $team->name];
                 $result['result'] = QuestionModel::teamResult($team->id);
+                $members = MemberModel::getAllMemberByTeam($team->id);
+                $list = '';
+                foreach($members as $member){
+                    if ($list > '') $list .= ',';
+                    $list .= $member->name;
+                }
+                $result['members'] = $list;
                 $results[] = $result;
             }
             usort($results,"cmp");
 
             $json = json_encode($results);
-            //header("Content-type:application/json");
+            header("Content-type:application/json");
             echo $json;
         }
     }

@@ -52,12 +52,12 @@ class TeamController extends Controller
            // check validity of team name: must be unique within tour
             $teamNameOK = TeamModel::validateNewNameOK($teamName,$tour->id);
             if (!$teamNameOK){
-                $response['feedback'] .= Text::get('FEEDBACK_TEAM_NAME_INVALID') . "<br>";
+                $response['feedback'] .= Text::get('FEEDBACK_TEAM_NAME_INVALID') . ".";
             }
 
-            $memberNameOK = memberModel::validateNewNameOK($memberName);
+            $memberNameOK = MemberModel::validateNewNameOK($memberName);
             if (!$memberNameOK){
-                $response['feedback'] .= Text::get('FEEDBACK_MEMBER_NAME_INVALID') . "<br>";
+                $response['feedback'] .= Text::get('FEEDBACK_MEMBER_NAME_INVALID') . ".";
             }
 
             if ($teamNameOK && $memberNameOK){
@@ -103,7 +103,7 @@ class TeamController extends Controller
             $tour = TourModel::getTour($team->tour_id);
             $memberNameOK = memberModel::validateNewNameOK($memberName,$team->id);
             if (!$memberNameOK){
-                $response['feedback'] .= Text::get('FEEDBACK_MEMBER_NAME_INVALID') . "<br>";
+                $response['feedback'] .= Text::get('FEEDBACK_MEMBER_NAME_INVALID') . ".";
             }
 
             if ($memberNameOK){

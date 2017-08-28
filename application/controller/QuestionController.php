@@ -18,6 +18,13 @@ class QuestionController extends Controller
         //Auth::checkAuthentication();
     }
 
+    public function index(){
+        $questions = QuestionModel::getAllQuestions();
+        $json = json_encode($questions);
+        header("Content-type:application/json");
+        echo $json;       
+    }
+
     public function get()
     {
         $questionCode = Request::post('questionCode');
@@ -40,22 +47,19 @@ class QuestionController extends Controller
                             $response['options'] = $options;
                             $response['success'] = true;
                         } else {
-                            $response['feedback'] .= Text::get('FEEDBACK_QUESTION_INVALID') . "<br>";                    
+                            $response['feedback'] .= Text::get('FEEDBACK_QUESTION_INVALID') . ".";                    
                         }
                     } else {
-                        $response['feedback'] .= Text::get('FEEDBACK_QUESTION_ANSWERED') . "<br>";                    
+                        $response['feedback'] .= Text::get('FEEDBACK_QUESTION_ANSWERED') . ".";                    
                     }
                 } else {
-                    $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CODE_INVALID') . "<br>"; 
+                    $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CODE_INVALID') . "."; 
                 }
             }
         }
-
-        
         $json = json_encode($response);
         header("Content-type:application/json");
         echo $json;
-
     }
 
     public function answer()
@@ -75,21 +79,20 @@ class QuestionController extends Controller
                         QuestionModel::answer($optionId, $team->id);
                         $option = QuestionModel::getOption($optionId);
                         if ($option->correct){
-                            $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CORRECT_ANSWERED') . "<br>";
+                            $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CORRECT_ANSWERED') . ".";
                         } else {
-                           $response['feedback'] .= Text::get('FEEDBACK_QUESTION_FALSE_ANSWERED') . "<br>";
+                           $response['feedback'] .= Text::get('FEEDBACK_QUESTION_FALSE_ANSWERED') . ".";
 
                         }
                     } else {
-                        $response['feedback'] .= Text::get('FEEDBACK_QUESTION_ANSWERED') . "<br>";                    
+                        $response['feedback'] .= Text::get('FEEDBACK_QUESTION_ANSWERED') . ".";                    
                     }
                 } else {
-                    $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CODE_INVALID') . "<br>"; 
+                    $response['feedback'] .= Text::get('FEEDBACK_QUESTION_CODE_INVALID') . "."; 
                 }
             }
         }
 
-        
         $json = json_encode($response);
         header("Content-type:application/json");
         echo $json;
@@ -103,11 +106,16 @@ class QuestionController extends Controller
         ));
     }*/
 
-     /*public function editSave()
+    public function editSave()
     {
-        NoteModel::updateNote(Request::post('note_id'), Request::post('note_text'));
-        Redirect::to('note');
-    }*/
+        var_dump($_POST);
+        $id = Request::post('id');
+        $title = Request::post('title');
+        $location = Request::post('location');
+        $description = Request::post('description');
+
+        QuestionModel::updateQuestion($id, $title,$location,$description);
+    }
 
     /*public function delete($note_id)
     {

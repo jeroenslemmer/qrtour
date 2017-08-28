@@ -3,7 +3,7 @@ var board = new Vue({
   el: '#board',
   data: {
     spaBag: spaBag
-  }
+  },
 });
 
 var start = new Vue({
@@ -13,9 +13,11 @@ var start = new Vue({
   },
   methods: {
     createTeam: function(event){
+      spaBag.feedback = '';
       spaBag.status = 1;
     },
     joinTeam: function(event){
+      spaBag.feedback = '';
       spaBag.status = 2;
     },
   }
@@ -30,29 +32,33 @@ var teamCreate = new Vue({
   },
   methods: {
     submit: function (event)
-    {
+    { 
+      spaBag.feedback = '';
       formData = new FormData();
       formData.append('tourPin', this.tourPin);
-      formData.append('teamName', this.teamName);
-      formData.append('memberName', this.memberName);
+      formData.append('teamName', this.teamName.trim().replace(/ +(?= )/g,''));
+      formData.append('memberName', this.memberName.trim());
       formData.append('csrf', spaBag.csrf);
       ajax('/team/create', {
         method: 'POST',
         data: formData,
         success: function(req){
-          document.getElementById('message').innerHTML = req.response;
+          //document.getElementById('message').innerHTML = req.response;
           var result = JSON.parse(req.response);
           if (result){
             for (prop in result){
-              if (spaBag[prop]) spaBag[prop] = result[prop];
+              if (spaBag[prop]!=null) {
+                spaBag[prop] = result[prop];
+              }
             }
             spaBag.status = (result.success)?3:1;
+            //setTimeout(function(){spaBag.feedback = '';},5000);
           }
         }
       });
     },
     back: function(event){
-      spaBag.feedback = ' ';
+      spaBag.feedback = '';
       spaBag.status = (spaBag.memberToken>'')?3:0;
     },
   }
@@ -68,9 +74,10 @@ var teamJoin = new Vue({
   methods: {
     submit: function (event)
     {
+      spaBag.feedback = '';
       formData = new FormData();
       formData.append('teamPin', this.teamPin);
-      formData.append('memberName', this.memberName);
+      formData.append('memberName', this.memberName);//.trim().replace(/ +(?= )/g,''));
       formData.append('csrf', spaBag.csrf);
       ajax('/team/join', {
         method: 'POST',
@@ -79,7 +86,9 @@ var teamJoin = new Vue({
           var result = JSON.parse(req.response);
           if (result){
             for (prop in result){
-              if (spaBag[prop]) spaBag[prop] = result[prop];
+              if (spaBag[prop]!=null) {
+                spaBag[prop] = result[prop];
+              }
             }
             spaBag.status = (result.success)?3:2;
           }
@@ -87,9 +96,8 @@ var teamJoin = new Vue({
       });
     },
     back: function(event){
-      spaBag.feedback = ' ';
+      spaBag.feedback = '';
       spaBag.status = (spaBag.memberToken>'')?3:0;
-
     }
   } 
 });
@@ -100,19 +108,20 @@ var team = new Vue({
   },
   methods: {
     scan: function(){
+      spaBag.feedback = '';
       spaBag.status = 4;
     },
     rejoin: function (event)
     {
+      spaBag.feedback = '';
       spaBag.status = 2;
-      spaBag.feedback = ' ';
       teamJoin.teamPin = '';
     },
     showPin: function(event){
+      spaBag.feedback = '';
       spaBag.status = 9;
     }
   }
-
 });
 
 var scan = new Vue({
@@ -128,7 +137,7 @@ var scan = new Vue({
     self.scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, captureImage: false, backgroundScan: true });
     self.scanner.addListener('scan', function (questionCode) {
       //self.scans.unshift({ date: +(Date.now()), content: content });
-      /* TEST */ questionCode = 'abcde';
+      /* TEST  questionCode = 'abcde';*/
       formData = new FormData();
       formData.append('questionCode', questionCode);
       ajax('/question/get', {
@@ -147,8 +156,7 @@ var scan = new Vue({
               question.description = result.description;
               spaBag.status = 5;
             } else {
-              setTimeout(function(){spaBag.status = 3;},1000);
-              setTimeout(function(){spaBag.feedback = '';},3000);
+              setTimeout(function(){spaBag.status = 3;},2000);
             }
           }
         }
@@ -171,12 +179,13 @@ var scan = new Vue({
       return name || '(unknown)';
     },
     selectCamera: function (camera) {
+      spaBag.feedback = '';
       this.activeCameraId = camera.id;
       this.scanner.start(camera);
     },
     back: function(event){
+      spaBag.feedback = '';
       spaBag.status = 3;
-      spaBag.feedback = ' ';
     }
   }
 });
@@ -195,6 +204,7 @@ var question = new Vue({
   },
   methods: {
     submit: function(event){
+      spaBag.feedback = '';
       if (!this.answer) return;
       formData = new FormData();
       formData.append('questionCode', this.code);
@@ -203,7 +213,7 @@ var question = new Vue({
         method: 'POST',
         data: formData,
         success: function(req){
-          document.getElementById('debug').innerHTML = req.response;
+          //document.getElementById('debug').innerHTML = req.response;
           var result = JSON.parse(req.response);
           if (result){
             spaBag.feedback = result.feedback;
@@ -230,8 +240,57 @@ var showPin = new Vue({
   },
   methods: {
     back: function(event){
+      spaBag.feedback = '';
       spaBag.status = 3;
     }
   }
 });
+
+function inputCertainCharactersOnly(e, regex) {
+  var chrTyped, chrCode=0, evt=e?e:event;
+  if (evt.charCode != null) 
+    chrCode = evt.charCode;
+  else if (evt.which != null)   
+    chrCode = evt.which;
+  else if (evt.keyCode != null) 
+    chrCode = evt.keyCode;
+
+  if (chrCode == 0) 
+    chrTyped = 'SPECIAL KEY';
+  else 
+    chrTyped = String.fromCharCode(chrCode);
+
+  //Digits, special keys & backspace [\b] work as usual:
+  if (chrTyped.match(regex)) return true;
+  if (evt.altKey || evt.ctrlKey || chrCode<28) return true;
+
+  //Any other input? Prevent the default response:
+  if (evt.preventDefault) evt.preventDefault();
+  evt.returnValue=false;
+  return false;
+}
+
+var accentedCharacters = '[éèëêÉÈËÊáàäâåÁÀÄÂÅóòöôÓÒÖÔíìïîÍÌÏÎúùüûÚÙÜÛýÿÝøØœŒÆçÇ]';
+
+var regExpWithAccentedCharacters = function(base){
+  return new RegExp(accentedCharacters+'|'+base);
+}
+
+function inputPinCharactersOnly(e){
+  return inputCertainCharactersOnly(e,/[0-9a-z]|SPECIAL/);
+}
+
+function inputNameCharactersOnly(e){
+  return inputCertainCharactersOnly(e,regExpWithAccentedCharacters("[\\s]|[0-9a-zA-Z]|SPECIAL"));
+}
+
+function sanitize(event){
+  //.dir(event);
+  event.target.value = event.target.value.trim().replace(/ +(?= )/g,'');
+}
+
+document.getElementById('board').className += ' focus';
+document.getElementById('actions').className += ' focus';
+
+
 

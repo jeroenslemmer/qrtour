@@ -71,6 +71,7 @@ return array(
     "FEEDBACK_ANSWER_CREATION_FAILED" => "Answer creation failed.",
     "FEEDBACK_MEMBER_CREATION_FAILED" => "Member creation failed.",
     "FEEDBACK_MEMBER_EDITING_FAILED" => "Member editing failed.",
+    "FEEDBACK_QUESTION_EDITING_FAILED" => "Question editing failed.",
     "FEEDBACK_NOTE_DELETION_FAILED" => "Note deletion failed.",
     "FEEDBACK_COOKIE_INVALID" => "Your remember-me-cookie is invalid.",
     "FEEDBACK_COOKIE_LOGIN_SUCCESSFUL" => "You were successfully logged in via the remember-me-cookie.",
