@@ -101,7 +101,7 @@ class TeamController extends Controller
 
         if ($team){
             $tour = TourModel::getTour($team->tour_id);
-            $memberNameOK = memberModel::validateNewNameOK($memberName,$team->id);
+            $memberNameOK = MemberModel::validateNewNameOK($memberName,$team->id);
             if (!$memberNameOK){
                 $response['feedback'] .= Text::get('FEEDBACK_MEMBER_NAME_INVALID') . ".";
             }

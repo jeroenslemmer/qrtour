@@ -21,23 +21,23 @@ class ContentController extends Controller
     }
 
     public function generatetc(){
-        TourModel::generateTourQuestions();
+        //TourModel::generateTourQuestions();
     }
 
     
     public function generateqc(){
-        TourModel::generateQuestionCodes();
+        //TourModel::generateQuestionCodes();
     }
 
     public function generatetp(){
-        TourModel::generateTourPins();
+        //TourModel::generateTourPins();
     }
 
-    public function cleanup($tourId){
+    public function cleanupforme($tourId){
         TourModel::cleanupTour($tourId);    
     }
 
-    public function resetmember(){
+    public function resetme(){
         Cookie::delete('memberToken');
     }
 

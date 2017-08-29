@@ -11,7 +11,7 @@
     <section id="actions" class="w3-panel w3-khaki">
       <div id="start" v-bind:class="{ focus: (spaBag.status == 0) }">
         <h1>Start</h1>
-        <p>Je gaat dit gebouw en het leerpark verkennen in een team. Overal kan je qr-codes scannen. Zo'n qr-code geeft je een vraag. Een goed antwoord levert punten. Deze app werkt alleen als je <strong>cookies accepteert</strong>!</p>
+        <p>Je gaat dit gebouw en het leerpark verkennen in een team. Overal kan je qr-codes scannen. Zo'n qr-code geeft je een vraag. Een goed antwoord levert punten. Deze app werkt alleen als je <strong>cookies accepteert</strong>!<br> Helaas ondersteunt deze app nog geen iOS-devices.</p>
         <button id="create-team" v-on:click="createTeam" class="w3-button w3-orange">Maak een nieuw team</button><br>
         <button id="join-team" v-on:click="joinTeam" class="w3-button w3-orange">Sluit je aan bij een team</button>
       </div>
@@ -56,6 +56,8 @@
               <span v-if="camera.id == activeCameraId" :title="formatName(camera.name)" class="active">{{ formatName(camera.name) }}</span>
               <button v-if="camera.id != activeCameraId" :title="formatName(camera.name)" class="w3-button w3-orange" v-on:click="selectCamera(camera)">{{ formatName(camera.name) }}</button>
             </li>
+            <!--li class=active><button class="w3-button w3-orange">test camera 2</button></li>
+            <li>test camera 3</li-->
           </ul>
         </section>
       </div>
